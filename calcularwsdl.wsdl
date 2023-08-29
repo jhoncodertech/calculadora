@@ -1,0 +1,109 @@
+<definitions
+  name="WSDLCalcula" 
+  targetNamespace="http://localhost/calculadora/calcularwsdl"
+  xmlns:tns="http://localhost/calculadora/calcularwsdl"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+>
+
+  <message name="sumaRequest">
+    <part name="a" type="xsd:float"/>
+    <part name="b" type="xsd:float"/>
+  </message>
+  <message name="sumaResponse">
+    <part name="resultado" type="xsd:float"/>
+  </message>
+
+  <message name="restaRequest">
+    <part name="a" type="xsd:float"/>
+    <part name="b" type="xsd:float"/>
+  </message>
+  <message name="restaResponse">
+    <part name="resultado" type="xsd:float"/>
+  </message>
+
+  <message name="multiplicacionRequest">
+    <part name="a" type="xsd:float"/>
+    <part name="b" type="xsd:float"/>
+  </message>
+  <message name="multiplicacionResponse">
+    <part name="resultado" type="xsd:float"/>
+  </message>
+
+  <message name="divisionRequest">
+    <part name="a" type="xsd:float"/>
+    <part name="b" type="xsd:float"/>
+  </message>
+  <message name="divisionResponse">
+    <part name="resultado" type="xsd:float"/>
+  </message>
+
+  <portType name="CalculaPortType">
+    <operation name="suma">
+      <input message="tns:sumaRequest"/>
+      <output message="tns:sumaResponse"/>
+    </operation>
+    <operation name="resta">
+      <input message="tns:restaRequest"/>
+      <output message="tns:restaResponse"/>
+    </operation>
+    <operation name="multiplicacion">
+      <input message="tns:multiplicacionRequest"/>
+      <output message="tns:multiplicacionResponse"/>
+    </operation>
+    <operation name="division">
+      <input message="tns:divisionRequest"/>
+      <output message="tns:divisionResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="CalculaBinding" type="tns:CalculaPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="suma">
+      <soap:operation soapAction="http://localhost/calculadora/calcularwsdl/server.php?method=suma"/>
+      <input>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="resta">
+      <soap:operation soapAction="http://localhost/calculadora/calcularwsdl/server.php?method=resta"/>
+      <input>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="multiplicacion">
+      <soap:operation soapAction="http://localhost/calculadora/calcularwsdl/server.php?method=multiplicacion"/>
+      <input>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="division">
+      <soap:operation soapAction="http://localhost/calculadora/calcularwsdl/server.php?method=division"/>
+      <input>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://localhost/calculadora/calcularwsdl" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="Calcularwsdl">
+    <port name="Calculaport" binding="tns:CalculaBinding">
+      <soap:address location="http://localhost/calculadora/calcularwsdl/server.php"/>
+    </port>
+  </service>
+</definitions>
+
