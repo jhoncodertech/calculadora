@@ -1,91 +1,64 @@
-<?php
-require_once "models/Cliente.php";
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CLIENTES</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LISTA DE CLIENETS</h1>
 
-switch ($_SERVER['REQUEST_METHOD']) {
-    case 'GET':
-        if (isset($_GET['id'])) {
-            echo json_encode(Cliente::getWhere($_GET['id']));
+        <!-- Formulario para crear un nuevo cliente -->
 
-        } //end if
-        else {
-            ?>
-            <table>
-            <tr style="padding: 20px;">
-                <th>Nombre</th>
-                <th>Apellido 1</th>
-                <th>Apellido 2</th>
-                <th>Fecha Nacimiento</th>
-                <th>Genero</th>
-                <th>Acciones</th>
-            </tr>
-            <?php
-            $xd = Cliente::getAll();
-            foreach ($xd as $x) {
-                ?>               
-                    <tr>
-                        <td><?php echo $x['nombre']; ?></td>
-                        <td><?php echo $x['apellido_1']; ?></td>
-                        <td><?php echo $x['apellido_2']; ?></td>
-                        <td><?php echo $x['fecha_nacimiento']; ?></td>
-                        <td><?php echo $x['genero']; ?></td>
-                        <td><a href="">editar</a></td>
-                        <td><a href="">eliminar</a></td>
-                    </tr>
-                
-                
-                <?php
-            }
-            ?>
-            </table>
-            <?php
-        } //end else
-        break;
+        <h2>Crear Cliente</h2>
+        <form id="create-client-form">
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" required><br>
+            <label for="ap">Apellido Paterno:</label>
+            <input type="text" name="ap" required><br>
+            <label for="am">Apellido Materno:</label>
+            <input type="text" name="am" required><br>
+            <label for="fn">Fecha de Nacimiento:</label>
+            <input type="date" name="fn" required><br>
+            <label for="genero">Género:</label>
+            <select name="genero">
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+            </select><br>
+            <input type="submit" value="Crear">
+        </form>
 
-    case 'POST':
-        $datos = json_decode(file_get_contents('php://input'));
-        if ($datos != NULL) {
-            if (Cliente::insert($datos->nombre, $datos->apellido_1, $datos->apellido_2, $datos->fecha_nacimiento, $datos->genero)) {
-                http_response_code(200);
-            } //end if
-            else {
-                http_response_code(400);
-            } //end else
-        } //end if
-        else {
-            http_response_code(405);
-        } //end else
-        break;
+        <!-- Lista de Clientes -->
 
-    case 'PUT':
-        $datos = json_decode(file_get_contents('php://input'));
-        if ($datos != NULL) {
-            if (Cliente::update($datos->id, $datos->nombre, $datos->apellido_1, $datos->apellido_2, $datos->fecha_nacimiento, $datos->genero)) {
-                http_response_code(200);
-            } //end if
-            else {
-                http_response_code(400);
-            } //end else
-        } //end if
-        else {
-            http_response_code(405);
-        } //end else
-        break;
+        <h2>Lista de clientes</h2>
+        <ul id="client-list">
+            <!-- Aquí se mostrará la lista de clientes -->
+        </ul>
 
-    case 'DELETE':
-        if (isset($_GET['id'])) {
-            if (Cliente::delete($_GET['id'])) {
-                http_response_code(200);
-            } //end if
-            else {
-                http_response_code(400);
-            } //end else
-        } //end if 
-        else {
-            http_response_code(405);
-        } //end else
-        break;
+        <!-- Formulario para editar un cliente (inicialmente oculto) -->
 
-    default:
-        http_response_code(405);
-        break;
-} //end while
+        <h2>Editar Cliente</h2>
+        <form id="edit-client-form" style="display: none;">
+            <input type="hidden" id="edit-client-id" name="id">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="edit-nombre" name="nombre" required><br>
+            <label for="ap">Apellido Paterno:</label>
+            <input type="text" id="edit-ap" name="ap" required><br>
+            <label for "am">Apellido Materno:</label>
+            <input type="text" id="edit-am" name="am" required><br>
+            <label for="fn">Fecha de Nacimiento:</label>
+            <input type="date" id="edit-fn" name="fn" required><br>
+            <label for="genero">Género:</label>
+            <select id="edit-genero" name="genero">
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+            </select><br>
+            <input type="submit" value="Guardar Cambios">
+        </form>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

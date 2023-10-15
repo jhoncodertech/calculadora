@@ -1,0 +1,105 @@
+/* Estilos generales */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center; /* Centrar el contenido */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff; /* Fondo blanco para el contenedor */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Alinear el contenido a la izquierda */
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+/* Estilos para los formularios */
+form {
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px; /* Aumentar el espaciado interno para una mejor apariencia */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estilos para la lista de clientes */
+#client-list {
+    list-style: none;
+    padding: 0;
+    text-align: center; /* Centrar el texto en la lista */
+}
+
+li {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* Estilos para el formulario de edición */
+#edit-client-form {
+    display: none; /* Ocultar el formulario de edición por defecto */
+}
+
+/* Estilos para los mensajes de error o éxito (puedes agregar estos elementos en tu HTML) */
+.error-message {
+    color: #e74c3c; /* Rojo para mensajes de error */
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.success-message {
+    color: #27ae60; /* Verde para mensajes de éxito */
+    margin: 10px 0;
+    font-weight: bold;
+}

@@ -1,81 +1,87 @@
 <?php
-    require_once "connection/Connection.php";
+require_once "../connection/Connection.php";
 
-    class Cliente {
+class Api {
+    private $conexion;
 
-        public static function getAll() {
-            $db = new Connection();
-            $query = "SELECT *FROM clientes";
-            $resultado = $db->query($query);
-            $datos = [];
-            if($resultado->num_rows) {
-                while($row = $resultado->fetch_assoc()) {
-                    $datos[] = [
-                        'id' => $row['id'],
-                        'nombre' => $row['nombre'],
-                        'apellido_1' => $row['ap'],
-                        'apellido_2' => $row['am'],
-                        'fecha_nacimiento' => $row['fn'],
-                        'genero' => $row['genero']
-                    ];
-                }//end while
-                return $datos;
-            }//end if
-            return $datos;
-        }//end getAll
+    public function __construct() {
+        $this->conexion = new Connection();
+    }
 
-        public static function getWhere($id_cliente) {
-            $db = new Connection();
-            $query = "SELECT *FROM clientes WHERE id=$id_cliente";
-            $resultado = $db->query($query);
-            $datos = [];
-            if($resultado->num_rows) {
-                while($row = $resultado->fetch_assoc()) {
-                    $datos[] = [
-                        'id' => $row['id'],
-                        'nombre' => $row['nombre'],
-                        'apellido_1' => $row['ap'],
-                        'apellido_2' => $row['am'],
-                        'fecha_nacimiento' => $row['fn'],
-                        'genero' => $row['genero']
-                    ];
-                }//end while
-                return $datos;
-            }//end if
-            return $datos;
-        }//end getWhere
+    public function getAll() {
+        $sql = "SELECT * FROM clientes";
+        $result = $this->conexion->query($sql);
+        $clientes = $result->fetch_all(MYSQLI_ASSOC);
+        return $clientes;
+    }
 
-        public static function insert($nombre, $ap, $am, $fn, $genero) {
-            $db = new Connection();
-            $query = "INSERT INTO clientes (nombre, ap, am, fn, genero)
-            VALUES('".$nombre."', '".$ap."', '".$am."', '".$fn."', '".$genero."')";
-            $db->query($query);
-            if($db->affected_rows) {
-                return TRUE;
-            }//end if
-            return FALSE;
-        }//end insert
+    public function postCliente($nombre, $ap, $am, $fn, $genero) {
+        $nombre = $this->conexion->real_escape_string($nombre);
+        $ap = $this->conexion->real_escape_string($ap);
+        $am = $this->conexion->real_escape_string($am);
+        $fn = $this->conexion->real_escape_string($fn);
+        $genero = $this->conexion->real_escape_string($genero);
+        
+        $sql = "INSERT INTO clientes (nombre, ap, am, fn, genero) VALUES ('$nombre', '$ap', '$am', '$fn', '$genero')";
+        $this->conexion->query($sql);
+        return $this->conexion->insert_id;
+    }
 
-        public static function update($id_cliente, $nombre, $ap, $am, $fn, $genero) {
-            $db = new Connection();
-            $query = "UPDATE clientes SET
-            nombre='".$nombre."', ap='".$ap."', am='".$am."', fn='".$fn."', genero='".$genero."' 
-            WHERE id=$id_cliente";
-            $db->query($query);
-            if($db->affected_rows) {
-                return TRUE;
-            }//end if
-            return FALSE;
-        }//end update
+    public function putCliente($id, $nombre, $ap, $am, $fn, $genero) {
+        $id = (int)$id;
+        $nombre = $this->conexion->real_escape_string($nombre);
+        $ap = $this->conexion->real_escape_string($ap);
+        $am = $this->conexion->real_escape_string($am);
+        $fn = $this->conexion->real_escape_string($fn);
+        $genero = $this->conexion->real_escape_string($genero);
 
-        public static function delete($id_cliente) {
-            $db = new Connection();
-            $query = "DELETE FROM clientes WHERE id=$id_cliente";
-            $db->query($query);
-            if($db->affected_rows) {
-                return TRUE;
-            }//end if
-            return FALSE;
-        }//end delete
+        $sql = "UPDATE clientes SET nombre = '$nombre', ap = '$ap', am = '$am', fn = '$fn', genero = '$genero' WHERE id = $id";
+        $this->conexion->query($sql);
+        return $this->conexion->affected_rows;
+    }
 
-    }//end class Cliente
+    public function deleteCliente($id) {
+        $id = (int)$id;
+        $sql = "DELETE FROM clientes WHERE id = $id";
+        $this->conexion->query($sql);
+        return $this->conexion->affected_rows;
+    }
+}
+
+$api = new Api();
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $response = $api->getAll();
+    echo json_encode($response);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if ($data) {
+        $nombre = $data['nombre'];
+        $ap = $data['ap'];
+        $am = $data['am'];
+        $fn = $data['fn'];
+        $genero = $data['genero'];
+        $response = $api->postCliente($nombre, $ap, $am, $fn, $genero);
+        echo json_encode(['id' => $response]);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if ($data && isset($data['id'])) {
+        $id = $data['id'];
+        $nombre = $data['nombre'];
+        $ap = $data['ap'];
+        $am = $data['am'];
+        $fn = $data['fn'];
+        $genero = $data['genero'];
+        $response = $api->putCliente($id, $nombre, $ap, $am, $fn, $genero);
+        echo json_encode(['filas_afectadas' => $response]);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $response = $api->deleteCliente($id);
+        echo json_encode(['filas_afectadas' => $response]);
+    }
+} else {
+    header("HTTP/1.0 405 Method Not Allowed");
+}
